@@ -124,6 +124,14 @@ The script defaults to the `deepseek` profile; set `EASY_AGENT_BENCHMARK_PROFILE
 
 For an isolated diagnostic run, pass `--task retry-boundary --repeats 1`; omit these options for the full 18-run benchmark. A failed provider setup is recorded as an environment failure, and the structured result or CLI error is saved in redacted form.
 
+The benchmark needs the credential variable referenced by the selected model profile. The local `deepseek` profile used for the 2026-09-27 run references `OPENAI_API_KEY`, which holds a DeepSeek key for that endpoint; it does not require an Anthropic key. If a Windows user variable is saved but the current PowerShell process has not inherited it, import it for this process before running the benchmark:
+
+```powershell
+$env:OPENAI_API_KEY = (Get-ItemProperty 'HKCU:\Environment').OPENAI_API_KEY
+```
+
+Use the variable name from your own profile. Do not print its value or write it to benchmark results.
+
 Plugin compatibility verification also requires an explicit package path or repository URL and remains outside the default gate:
 
 ```bash

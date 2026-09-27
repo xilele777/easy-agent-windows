@@ -177,6 +177,10 @@ async function main(): Promise<void> {
   assert(is529Error(apiError(500, '{"type":"overloaded_error"}')) === true, "is529Error true for overloaded body");
   assert(is529Error(apiError(429, "x")) === false, "is529Error false for 429");
   assert(getUserFacingErrorMessage(apiError(401, "x-api-key")).includes("API key"), "auth message mentions API key");
+  assert(getUserFacingErrorMessage(apiError(401, "x-api-key")).includes("ANTHROPIC_AUTH_TOKEN"), "Anthropic auth still names its token");
+  const profileAuthMessage = getUserFacingErrorMessage(apiError(401, "bad key"), "deepseek", "openai-chat");
+  assert(profileAuthMessage.includes("deepseek") && profileAuthMessage.includes("apiKey"), "profile auth message names the configured key");
+  assert(!profileAuthMessage.includes("ANTHROPIC_AUTH_TOKEN"), "non-Anthropic auth does not suggest an Anthropic token");
   const forbiddenMessage = getUserFacingErrorMessage(apiError(403, "Your request was blocked."));
   assert(forbiddenMessage.includes("Your request was blocked."), "403 message preserves upstream block reason");
   assert(!forbiddenMessage.includes("API key"), "403 message is not mislabeled as an API-key failure");

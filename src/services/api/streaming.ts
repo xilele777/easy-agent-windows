@@ -499,6 +499,9 @@ export async function* streamMessage(
         attempt,
         message: error instanceof Error ? error.message : String(error),
       });
+      const protocol = classifyAPIError(error) === "auth_error"
+        ? (await resolveProfile(model)).protocol
+        : undefined;
 
       // Aborted requests are never retried — surface the original error and
       // stop, preserving the pre-Stage-27 abort behavior.
@@ -526,7 +529,7 @@ export async function* streamMessage(
           attempt,
           maxRetries,
           delayMs: decision.delayMs,
-          errorMessage: getUserFacingErrorMessage(error, model),
+          errorMessage: getUserFacingErrorMessage(error, model, protocol),
           category: classifyAPIError(error),
         };
         await sleep(decision.delayMs, params.signal);
@@ -536,7 +539,7 @@ export async function* streamMessage(
       // Non-retryable, exhausted, or mid-stream failure → surface friendly.
       yield {
         type: "error",
-        error: toFriendlyError(error, model),
+        error: toFriendlyError(error, model, protocol),
         category: classifyAPIError(error),
       };
       return errorStreamResult();

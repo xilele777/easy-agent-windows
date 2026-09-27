@@ -210,6 +210,7 @@ export function isRetryableError(error: unknown): boolean {
 export function getUserFacingErrorMessage(
   error: unknown,
   model?: string,
+  protocol?: string,
 ): string {
   const category = classifyAPIError(error);
   const rawMessage =
@@ -217,6 +218,9 @@ export function getUserFacingErrorMessage(
 
   switch (category) {
     case "auth_error":
+      if (protocol && protocol !== "anthropic") {
+        return `Invalid or missing API key for model profile "${model ?? "unknown"}". Check its apiKey setting and the environment variable it references.`;
+      }
       return INVALID_API_KEY_MESSAGE;
     case "permission_denied":
       // Keep the upstream detail. A generic 403 may be a model entitlement,
@@ -250,8 +254,8 @@ export function getUserFacingErrorMessage(
  * Wrap an arbitrary thrown value into an Error whose message is the friendly,
  * category-mapped text. Preserves the original via `cause` for debugging.
  */
-export function toFriendlyError(error: unknown, model?: string): Error {
-  const friendly = new Error(getUserFacingErrorMessage(error, model));
+export function toFriendlyError(error: unknown, model?: string, protocol?: string): Error {
+  const friendly = new Error(getUserFacingErrorMessage(error, model, protocol));
   if (error instanceof Error) {
     friendly.stack = error.stack;
     (friendly as Error & { cause?: unknown }).cause = error;

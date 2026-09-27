@@ -2,6 +2,8 @@
 
 一个使用 TypeScript 和 Node.js 构建的开源终端 Coding Agent。
 
+本仓库基于 [ConardLi 的 Easy Agent](https://github.com/ConardLi/easy-agent) 独立维护，当前重点改进 Windows 体验；保留原作者署名与 MIT 许可证。npm 上已发布的 `eagent` 包来自原项目，如需使用本仓库的 Windows 改动，请从源码构建。
+
 ![Easy Agent banner](https://raw.githubusercontent.com/ConardLi/easy-agent/main/public/img/banner.jpeg)
 
 Easy Agent 在一套可阅读、可扩展的代码中提供类 Claude Code 工作流：流式模型对话、本地文件与 Shell 工具、权限模式、会话、MCP、Skills、Sub-Agent、Agent Teams、多模态输入和插件系统。
@@ -84,7 +86,7 @@ eagent
 easy-agent --help
 ```
 
-macOS 和 Linux 可以使用基于 npm 的安装脚本：
+macOS 和 Linux 可以使用原项目基于 npm 的安装脚本：
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/ConardLi/easy-agent/main/install.sh | sh
@@ -219,7 +221,7 @@ npm uninstall -g eagent
 2. 在 Easy Agent 中运行 `/doctor`，检查凭证、Settings、MCP、Plugins、Sandbox 支持和目录写入权限。
 3. 运行 `/status` 和 `/config list`，确认当前模型与配置来源。
 4. 如果全局安装成功但找不到 `eagent`，请把 `npm prefix -g` 对应的全局 bin 目录加入 `PATH`，然后打开一个新 Shell。
-5. 可复现的问题请提交到 [GitHub Issues](https://github.com/ConardLi/easy-agent/issues)。
+5. 可复现的问题请提交到 [GitHub Issues](https://github.com/xilele777/easy-agent-windows/issues)。
 
 提交 Issue 时不要包含 API Key、`.env` 内容或私密 Prompt。
 
@@ -246,8 +248,8 @@ Provider API 与流式适配
 ## 本地开发
 
 ```bash
-git clone https://github.com/ConardLi/easy-agent.git
-cd easy-agent
+git clone https://github.com/xilele777/easy-agent-windows.git
+cd easy-agent-windows
 npm install
 npm run dev
 ```

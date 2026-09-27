@@ -18,11 +18,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ConardLi/easy-agent.git"
+    "url": "git+https://github.com/xilele777/easy-agent-windows.git"
   },
-  "homepage": "https://github.com/ConardLi/easy-agent#readme",
+  "homepage": "https://github.com/xilele777/easy-agent-windows#readme",
   "bugs": {
-    "url": "https://github.com/ConardLi/easy-agent/issues"
+    "url": "https://github.com/xilele777/easy-agent-windows/issues"
   },
   "scripts": {
     "dev": "tsx src/entrypoint/cli.ts",

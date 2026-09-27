@@ -2,6 +2,8 @@
 
 An open-source, terminal-native coding agent built with TypeScript and Node.js.
 
+This repository continues [ConardLi's Easy Agent](https://github.com/ConardLi/easy-agent) as an independent Windows-focused project. The original author and MIT license are retained. The published `eagent` npm package is from the original project; build this repository from source to use its Windows changes.
+
 ![Easy Agent banner](https://raw.githubusercontent.com/ConardLi/easy-agent/main/public/img/banner.jpeg)
 
 Easy Agent provides a Claude Code-style workflow in a readable, extensible codebase: streaming model conversations, local file and shell tools, permission modes, sessions, MCP, skills, sub-agents, Agent Teams, multimodal input, and plugins.
@@ -84,7 +86,7 @@ The long command name is also available:
 easy-agent --help
 ```
 
-An npm-backed installer is available for macOS and Linux:
+The original project's npm-backed installer is available for macOS and Linux:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/ConardLi/easy-agent/main/install.sh | sh
@@ -219,7 +221,7 @@ User configuration and sessions under `~/.easy-agent/` are intentionally preserv
 2. Run `/doctor` inside Easy Agent to inspect credentials, settings, MCP, plugins, sandbox support, and writable paths.
 3. Run `/status` and `/config list` to verify the active model and configuration sources.
 4. If a global install succeeds but `eagent` is not found, add the npm global bin directory associated with `npm prefix -g` to `PATH`, then open a new shell.
-5. Report reproducible problems through [GitHub Issues](https://github.com/ConardLi/easy-agent/issues).
+5. Report reproducible problems through [GitHub Issues](https://github.com/xilele777/easy-agent-windows/issues).
 
 Never include API keys, `.env` contents, or private prompts in an issue.
 
@@ -246,8 +248,8 @@ The implementation and tutorial snapshot series are complete through Stage 35. S
 ## Development
 
 ```bash
-git clone https://github.com/ConardLi/easy-agent.git
-cd easy-agent
+git clone https://github.com/xilele777/easy-agent-windows.git
+cd easy-agent-windows
 npm install
 npm run dev
 ```

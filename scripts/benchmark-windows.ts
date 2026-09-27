@@ -145,8 +145,14 @@ const fixtureOnly = process.argv.includes("--check-fixtures");
 const outputIndex = process.argv.indexOf("--output");
 const outputPath = outputIndex < 0 ? null : resolve(process.argv[outputIndex + 1] ?? "");
 if (outputIndex >= 0 && !process.argv[outputIndex + 1]) throw new Error("--output needs a path");
+const taskIndex = process.argv.indexOf("--task");
+const taskId = taskIndex < 0 ? null : process.argv[taskIndex + 1];
+if (taskIndex >= 0 && !tasks.some((task) => task.id === taskId)) throw new Error("--task needs a known task ID");
+const repeatsIndex = process.argv.indexOf("--repeats");
+const selectedRepeats = repeatsIndex < 0 ? 3 : Number(process.argv[repeatsIndex + 1]);
+if (!Number.isInteger(selectedRepeats) || selectedRepeats < 1) throw new Error("--repeats needs a positive integer");
 if (outputPath) await writeFile(outputPath, "");
-const repeats = fixtureOnly ? 1 : 3;
+const repeats = fixtureOnly ? 1 : selectedRepeats;
 const root = await mkdtemp(join(tmpdir(), "easy-agent-benchmark-"));
 const results: Record<string, unknown>[] = [];
 const benchmarkCommit = run("git", ["rev-parse", "HEAD"], repo).stdout.trim();
@@ -186,7 +192,7 @@ async function emit(item: Record<string, unknown>) {
 }
 
 try {
-  for (const task of tasks) {
+  for (const task of tasks.filter((item) => taskId === null || item.id === taskId)) {
     for (let repeat = 1; repeat <= repeats; repeat++) {
     const cwd = join(root, `${task.id}-${repeat}`);
     await mkdir(join(cwd, "src"), { recursive: true });
@@ -225,7 +231,7 @@ try {
     const initialFilesHash = digest(Object.entries(task.files).sort().map(([file, content]) => `${file}\0${content}`).join("\0"));
     const success = agent.status === 0 && result.subtype === "success" && !result.is_error
       && test.status === 0 && status.status === 0 && inScope;
-    const diagnostic = safeText(agent.error?.message ?? (agent.status !== 0 ? result.result ?? agent.stderr ?? "" : ""));
+    const diagnostic = safeText(agent.error?.message ?? (agent.status !== 0 ? result.result || agent.stderr || "" : ""));
     const failureType = success ? null : classifyFailure(agent.status, result.subtype, diagnostic,
       test.status, inScope, agent.error);
     const item = {
@@ -251,4 +257,4 @@ try {
 
 const passed = results.filter((item) => item.success).length;
 await emit({ summary: { passed, total: results.length, fixtureOnly } });
-if (!fixtureOnly && passed !== tasks.length * repeats) process.exitCode = 1;
+if (!fixtureOnly && passed !== (taskId ? 1 : tasks.length) * repeats) process.exitCode = 1;

@@ -122,6 +122,8 @@ node --import tsx scripts/benchmark-windows.ts --output "$env:TEMP\easy-agent-be
 
 The script defaults to the `deepseek` profile; set `EASY_AGENT_BENCHMARK_PROFILE` to use another configured profile. It creates a fresh temporary Git repository for each of the 18 runs. Each JSONL record includes the baseline commit and fixture hash, profile, CLI and test status, changed-file list, Git diff, wall time, model-reported time, Token counts, and failure category. It removes the temporary repositories on exit. The optional `--output` file is replaced at the start of a run. Keep that file private until reviewed because it contains model-edited code and test diagnostics; API keys and raw provider replies are excluded or redacted. This credentialed live check is outside the default gate.
 
+For an isolated diagnostic run, pass `--task retry-boundary --repeats 1`; omit these options for the full 18-run benchmark. A failed provider setup is recorded as an environment failure, and the structured result or CLI error is saved in redacted form.
+
 Plugin compatibility verification also requires an explicit package path or repository URL and remains outside the default gate:
 
 ```bash

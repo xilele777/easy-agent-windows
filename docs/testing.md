@@ -113,13 +113,14 @@ Live tests require valid provider credentials and may consume API quota. They ru
 npm run verify:production:live
 ```
 
-For the three-task Windows real-model benchmark pilot, build the CLI, configure a user-level model profile, and run:
+For the six-task Windows real-model benchmark, build the CLI and configure a user-level model profile. Check the six initial failing fixtures without a provider call, then run three repetitions per task:
 
 ```powershell
-node --import tsx scripts/benchmark-windows.ts
+node --import tsx scripts/benchmark-windows.ts --check-fixtures
+node --import tsx scripts/benchmark-windows.ts --output "$env:TEMP\easy-agent-benchmark.jsonl"
 ```
 
-The script defaults to the `deepseek` profile; set `EASY_AGENT_BENCHMARK_PROFILE` to use another configured profile. It creates isolated temporary Git repositories, runs the agent in headless mode, checks the final tests and changed-file scope, prints per-task JSON metrics, then removes the fixtures. This is a credentialed live check and is not part of the default gate.
+The script defaults to the `deepseek` profile; set `EASY_AGENT_BENCHMARK_PROFILE` to use another configured profile. It creates a fresh temporary Git repository for each of the 18 runs. Each JSONL record includes the baseline commit and fixture hash, profile, CLI and test status, changed-file list, Git diff, wall time, model-reported time, Token counts, and failure category. It removes the temporary repositories on exit. The optional `--output` file is replaced at the start of a run. Keep that file private until reviewed because it contains model-edited code and test diagnostics; API keys and raw provider replies are excluded or redacted. This credentialed live check is outside the default gate.
 
 Plugin compatibility verification also requires an explicit package path or repository URL and remains outside the default gate:
 
